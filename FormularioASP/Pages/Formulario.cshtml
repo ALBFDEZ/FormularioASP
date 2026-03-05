@@ -1,0 +1,595 @@
+﻿@page
+
+@inject IConfiguration Configuration
+
+
+@model FormularioASP.Pages.FormularioModel
+@{
+    ViewData["Title"] = "Formulario de Alta";
+}
+
+<div class="container mt-4">
+
+    <form method="post" enctype="multipart/form-data">
+
+        <img src="/images/logo.png" style="height:260px;" />
+
+        <br/>
+        <br/>
+
+        <!-- DATOS ACCESO -->
+        <fieldset class="p-3" style="border: 2px solid #c89de0;">
+            <legend class="w-auto" style="font-weight:bold; text-decoration:underline;">DATOS DE ACCESO</legend>
+            <input id="Documento" class="form-control mb-2 obligatorio" placeholder="NIF/NIE/PASAPORTE" />
+        </fieldset>
+
+        <br />
+
+        <!-- DATOS PERSONALES -->
+        <fieldset class="p-3" style="border: 2px solid #c89de0;">
+            <legend class="w-auto" style="font-weight:bold; text-decoration:underline;">DATOS PERSONALES</legend>
+
+            <!-- NOMBRE -->
+            <input id="Apellido1" class="form-control mb-2 obligatorio" placeholder="Nombre" />
+            <input id="Apellido1" class="form-control mb-2 obligatorio" placeholder="Primer Apellido" />
+            <input id="Apellido2" class="form-control mb-2 obligatorio" placeholder="Segundo Apellido" />
+
+            <br/>
+
+            <!-- FECHA NACIMIENTO -->
+            <label class="fw-bold">Fecha de nacimiento:</label>
+            <input asp-for="FechaNacimiento" id="FechaNacimiento" class="form-control mb-2 obligatorio" placeholder="dd/MM/yyyy" />
+
+            <br/>
+
+            <!-- SEXO -->
+            <label class="fw-bold">Sexo:</label>
+            <div class="d-flex gap-3 mb-2 obligatorio" id="SexoGrupo">
+                <label><input type="radio" name="sexo" value="Hombre" /> Hombre</label>
+                <label><input type="radio" name="sexo" value="Mujer" /> Mujer</label>
+            </div>
+
+            <br/>
+
+            <!-- DOMICILIO -->
+            <div class="row mb-2">
+
+                <label class="fw-bold">Dirección:</label>
+
+                <div class="col-6">
+                    <input id="Calle" class="form-control obligatorio" placeholder="Calle" />
+                </div>
+
+                <div class="col-3">
+                    <input id="Piso" class="form-control obligatorio" placeholder="Piso" />
+                </div>
+
+                <div class="col-3">
+                    <input id="Puerta" class="form-control obligatorio" placeholder="Puerta" />
+                </div>
+            </div>
+
+            <select class="form-select mb-2">
+                <option>TORREJÓN DE ARDOZ</option>
+                <option>ALCALÁ DE HENARES</option>
+                <option>COSLADA</option>
+            </select>
+
+            <br/>
+
+            <!-- TELÉFONO PRINCIPAL -->
+            <label class="fw-bold">Teléfono principal:</label>
+
+            <div class="mb-2">
+                <input id="Telefono1" class="form-control obligatorio" placeholder="XXX XX XX XX" />
+            </div>
+
+            <!-- TELÉFONO SECUNDARIO -->
+            <label class="fw-bold">Teléfono secundario:</label>
+
+            <div class="mb-2">
+                <input id="Telefono2" class="form-control" placeholder="XXX XX XX XX" />
+            </div>
+
+            <br/>
+
+            <!-- CORREO -->
+            <label class="fw-bold">Correo:</label>
+            <input class="form-control mb-2" placeholder="Email" />
+
+            <br/>
+
+            <!-- NACIONALIDAD -->
+            <label class="fw-bold">Nacionalidad:</label>
+            <select class="form-select mb-2">
+                <option>Afganistán</option>
+                <option>España</option>
+                <option>Marruecos</option>
+                <option>Colombia</option>
+                <option>Argentina</option>
+                <option>Venezuela</option>
+            </select>
+
+            <br/>
+
+            <!-- FECHA DEMANDA -->
+            <label class="fw-bold">Fecha de demandante de empleo:</label>
+            <input asp-for="FechaDemanda" id="FechaDemanda" class="form-control mb-2 obligatorio" placeholder="dd/MM/yyyy" />
+
+            <br/>
+
+            <!-- DESEMPLEADO -->
+            <label class="fw-bold">¿Estás desempleado?</label>
+            <div class="d-flex gap-3 mb-2 obligatorio" id="DesempleoGrupo">
+                <label><input type="radio" name="desempleo" value="Sí" /> Sí</label>
+                <label><input type="radio" name="desempleo" value="No" /> No</label>
+            </div>
+
+            <br/>
+
+            <!-- MEJORA -->
+            <label class="fw-bold">¿Estás en mejora de empleo?</label>
+            <div class="d-flex gap-3 mb-2 obligatorio" id="MejoraGrupo">
+                <label><input type="radio" name="mejora" value="Sí" /> Sí</label>
+                <label><input type="radio" name="mejora" value="No" /> No</label>
+            </div>
+        </fieldset>
+
+        <br />
+
+        <!-- DISCAPACIDAD -->
+        <fieldset class="p-3" style="border: 2px solid #c89de0;">
+            <legend class="w-auto" style="font-weight:bold; text-decoration:underline;">DISCAPACIDAD RECONOCIDA</legend>
+
+            <p class="text-muted">Solo marcar si la discapacidad es igual o mayor del 33%</p>
+
+            <div class="row">
+                <div class="col-4"><input type="checkbox" /> Física</div>
+                <div class="col-4"><input type="checkbox" /> Psíquica</div>
+                <div class="col-4"><input type="checkbox" /> Sensorial</div>
+            </div>
+        </fieldset>
+
+        <br />
+
+        <!-- TIPOS DE CARNET -->
+        <fieldset class="p-3" style="border: 2px solid #c89de0;">
+            <legend class="w-auto" style="font-weight:bold; text-decoration:underline;">TIPOS DE CARNETS</legend>
+
+            <div class="row row-cols-3">
+                <div class="col"><input type="checkbox" /> A</div>
+                <div class="col"><input type="checkbox" /> A1</div>
+                <div class="col"><input type="checkbox" /> ADR</div>
+                <div class="col"><input type="checkbox" /> Autorización BTP</div>
+                <div class="col"><input type="checkbox" /> B</div>
+                <div class="col"><input type="checkbox" /> B+E</div>
+                <div class="col"><input type="checkbox" /> C</div>
+                <div class="col"><input type="checkbox" /> C+E</div>
+                <div class="col"><input type="checkbox" /> C1</div>
+                <div class="col"><input type="checkbox" /> C1+E</div>
+                <div class="col"><input type="checkbox" /> CAP</div>
+                <div class="col"><input type="checkbox" /> Carretillero</div>
+                <div class="col"><input type="checkbox" /> D</div>
+                <div class="col"><input type="checkbox" /> D1+E</div>
+                <div class="col"><input type="checkbox" /> Internacional</div>
+                <div class="col"><input type="checkbox" /> Tarjeta tacógrafo</div>
+            </div>
+        </fieldset>
+
+        <br />
+
+        <!-- PUESTOS SOLICITADOS -->
+        <fieldset class="p-3" style="border: 2px solid #c89de0;">
+            <legend class="w-auto" style="font-weight:bold; text-decoration:underline;">
+                PUESTOS SOLICITADOS
+                <a href="insertar pagina" target="_blank" class="ms-2" style="color:#c89de0; font-weight:bold;">
+                    (consultar listado)
+                </a>
+            </legend>
+
+            <div class="row mb-2">
+                <div class="col-6"><label class="fw-bold">CATEGORÍA</label></div>
+                <div class="col-6"><label class="fw-bold">PUESTO DE TRABAJO</label></div>
+            </div>
+
+            <div id="contenedor-puestos">
+
+                <div class="row mb-3 puesto-row">
+                    <div class="col-6">
+                        <select class="form-select categoria-picker">
+                            <option value="">Seleccione una categoría</option>
+                            <option value="Turismo">Turismo</option>
+                            <option value="Alimentación">Alimentación</option>
+                            <option value="Comercial">Comercial</option>
+                            <option value="Educación">Educación</option>
+                            <option value="Diseño">Diseño</option>
+                            <option value="Electricidad">Electricidad</option>
+                        </select>
+                    </div>
+
+                    <div class="col-6">
+                        <select class="form-select puesto-picker">
+                            <option value="">Seleccione un puesto</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <button type="button" id="btnAñadir" class="btn"
+                        style="background-color:#c89de0; border-color:#c89de0; color:white;">
+                    Añadir
+                </button>
+
+                <button type="button" id="btnEliminar" class="btn ms-2"
+                        style="background-color:#d3d3d3; border-color:#d3d3d3; color:black;">
+                    Eliminar
+                </button>
+            </div>
+        </fieldset>
+
+        <br />
+
+        <!-- CV -->
+        <h4>CURRICULUM</h4>
+
+        <input type="file" asp-for="ArchivoCV" class="form-control mb-2 obligatorio" />
+
+        @if (Model.ArchivoNombre != null)
+        {
+            <p class="text-success fst-italic">Archivo "@Model.ArchivoNombre" añadido correctamente.</p>
+        }
+
+        <br />
+
+        <!-- POLITICA -->
+        <div id="PoliticaContainer" class="d-flex gap-2 mb-3">
+            <input type="checkbox" asp-for="PoliticaAceptada" id="PoliticaAceptada" />
+
+            <label>
+                He leído la
+                <a href="#" class="text-decoration-underline"
+                   onclick="mostrarHola(); return false;"
+                   style="color:#c89de0;">
+                    política de privacidad
+                </a>
+            </label>
+        </div>
+
+        <p id="PoliticaError" style="color:#d9534f; display:none; font-weight:bold;">
+            Debes aceptar la política de privacidad.
+        </p>
+
+        <!-- CAPTCHA -->
+        <div id="CaptchaContainer">
+            <div class="g-recaptcha" data-sitekey="@Configuration["GoogleReCaptcha:SiteKey"]"></div>
+        </div>
+
+        <p id="CaptchaError" style="color:#d9534f; display:none; font-weight:bold;">
+            Debes verificar que no eres un robot.
+        </p>
+
+        <br/>
+
+        <!-- BOTONES FINALES-->
+        <div class="d-flex gap-3 justify-content-center">
+            <button id="btnEnviar" class="btn btn-primary" asp-page-handler="Enviar"
+                    style="background-color:#c89de0; border-color:#c89de0;">
+                Dar de alta
+            </button>
+
+            <button class="btn btn-secondary" asp-page-handler="Cancelar">Cancelar</button>
+        </div>
+
+    </form>
+
+    <!-- MENSAJE POLITICA -->
+    <div class="modal fade" id="holaModal" tabindex="-1" aria-labelledby="holaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="holaLabel">Mensaje</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body">
+                    Quién es el responsable del tratamiento: Ayuntamiento de Torrejón de Ardoz - Plaza Mayor, 1 - 28850 Torrejón de Ardoz. Tfno: 91 678 95 00. Puede contactar con la Delegada de Protección de Datos en dpd@ayto-torrejon.es.<br /><br />
+
+                    Con qué finalidad: Llevar a cabo la gestión de búsqueda de empleo y favorecer el contacto entre empresas y demandantes de empleo.<br /><br />
+
+                    Por qué puede hacerlo: Porque al entregar la ficha de inscripción solicitando el alta en la Bolsa de Empleo nos da su consentimiento para ello.<br /><br />
+
+                    Quién más accede a tus datos: Empresas que se pongan en contacto con la Oficina Municipal de Empleo para posibles incorporaciones en las mismas, siempre y cuando su perfil se ajuste al que la empresa esté solicitando.<br /><br />
+
+                    Qué derechos tienes y dónde ejercitarlos: Acceso, rectificación, supresión, oposición, limitación del tratamiento y revocación del consentimiento presentando un escrito acompañado de una copia de su documento de identidad 
+                    dirigido a la Concejalía de Administración ante la oficina de Registro presencial o virtual o a través de la Sede Electrónica del Ayuntamiento. Presentación de una reclamación ante la Agencia Española de Protección de Datos (AEPD).<br /><br />
+
+                    Más información: En la página web del Ayuntamiento www.ayto-torrejon.es.<br /><br />
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT DAR DE ALTA -->
+    <script>
+        document.getElementById("btnEnviar").addEventListener("click", function (e) {
+
+            let campos = document.querySelectorAll(".obligatorio");
+            let hayErrores = false;
+
+            campos.forEach(campo => {
+
+                campo.classList.remove("campo-error");
+
+                // Caso especial: grupos de radio
+                if (campo.querySelectorAll("input[type=radio]").length > 0) {
+                    const radios = campo.querySelectorAll("input[type=radio]");
+                    const algunoMarcado = [...radios].some(r => r.checked);
+
+                    if (!algunoMarcado) {
+                        campo.classList.add("campo-error");
+                        hayErrores = true;
+                    }
+
+                    return;
+                }
+
+                // Inputs normales
+                if (!campo.value || campo.value.trim() === "") {
+                    campo.classList.add("campo-error");
+                    hayErrores = true;
+                }
+            });
+
+
+        // Validación del reCAPTCHA
+        const captchaResponse = document.querySelector('textarea[name="g-recaptcha-response"]')?.value;
+        const captchaContainer = document.getElementById("CaptchaContainer");
+        const captchaError = document.getElementById("CaptchaError");
+
+        if (!captchaResponse || captchaResponse.trim() === "") {
+            captchaContainer.classList.add("campo-error");
+            captchaError.style.display = "block";
+            hayErrores = true;
+        } else {
+            captchaContainer.classList.remove("campo-error");
+            captchaError.style.display = "none";
+        }
+
+        
+        // Validación de la polItica de privacidad
+        const politica = document.getElementById("PoliticaAceptada");
+        const politicaContainer = document.getElementById("PoliticaContainer");
+        const politicaError = document.getElementById("PoliticaError");
+
+        if (!politica.checked) {
+            politicaContainer.classList.add("campo-error");
+            politicaError.style.display = "block";
+            hayErrores = true;
+        } else {
+            politicaContainer.classList.remove("campo-error");
+            politicaError.style.display = "none";
+        }
+
+            if (hayErrores) {
+                e.preventDefault();
+                alert("Faltan campos obligatorios por rellenar.");
+            }
+        });
+    </script>
+
+    <!-- SCRIPT PARA ABRIR EL MODAL -->
+    <script>
+        function mostrarHola() {
+            var modal = new bootstrap.Modal(document.getElementById('holaModal'));
+            modal.show();
+        }
+    </script>
+
+    <!-- SCRIPT FECHAS -->
+    <script>
+        function configurarFecha(idCampo, validarEdad) {
+            const input = document.getElementById(idCampo);
+
+            input.addEventListener("input", function () {
+
+                const oldValue = input.getAttribute("data-old") || "";
+                const newValue = input.value;
+
+                const borrando = newValue.length < oldValue.length;
+
+                input.setAttribute("data-old", newValue);
+
+                if (borrando) {
+                    input.style.color = "red";
+                    return;
+                }
+
+                let valor = newValue.replace(/\D/g, "");
+
+                if (valor.length > 8)
+                    valor = valor.substring(0, 8);
+
+                if (valor.length >= 4) {
+                    valor = valor.substring(0, 2) + "/" +
+                            valor.substring(2, 4) + "/" +
+                            valor.substring(4);
+                }
+                else if (valor.length >= 2) {
+                    valor = valor.substring(0, 2) + "/" +
+                            valor.substring(2);
+                }
+
+                input.value = valor;
+
+                if (valor.length === 10) {
+                    if (validarFecha(valor, validarEdad)) {
+                        input.style.color = "black";
+                    } else {
+                        input.style.color = "red";
+                    }
+                } else {
+                    input.style.color = "red";
+                }
+            });
+        }
+
+        function validarFecha(texto, validarEdad) {
+            const partes = texto.split("/");
+            if (partes.length !== 3) return false;
+
+            const dia = parseInt(partes[0]);
+            const mes = parseInt(partes[1]);
+            const año = parseInt(partes[2]);
+
+            const fecha = new Date(año, mes - 1, dia);
+
+            if (fecha.getFullYear() !== año ||
+                fecha.getMonth() !== mes - 1 ||
+                fecha.getDate() !== dia) {
+                return false;
+            }
+
+            if (!validarEdad) return true;
+
+            const hoy = new Date();
+            let edad = hoy.getFullYear() - año;
+
+            const cumpleEsteAño = new Date(hoy.getFullYear(), mes - 1, dia);
+            if (hoy < cumpleEsteAño) edad--;
+
+            return edad >= 16 && edad <= 80;
+        }
+
+        configurarFecha("FechaNacimiento", true);
+        configurarFecha("FechaDemanda", false);
+    </script>
+
+    <!-- SCRIPT DE TELEFONOS -->
+
+    <script>
+        function configurarTelefono(idCampo) {
+            const input = document.getElementById(idCampo);
+
+            input.addEventListener("input", function () {
+
+                const oldValue = input.getAttribute("data-old") || "";
+                const newValue = input.value;
+
+                const borrando = newValue.length < oldValue.length;
+                input.setAttribute("data-old", newValue);
+
+                if (borrando) {
+                    input.style.color = "red";
+                    return;
+                }
+
+                let valor = newValue.replace(/\D/g, "");
+
+                if (valor.length > 9)
+                    valor = valor.substring(0, 9);
+
+                if (valor.length >= 7) {
+                    valor = valor.substring(0, 3) + " " +
+                            valor.substring(3, 5) + " " +
+                            valor.substring(5, 7) + " " +
+                            valor.substring(7);
+                }
+                else if (valor.length >= 5) {
+                    valor = valor.substring(0, 3) + " " +
+                            valor.substring(3, 5) + " " +
+                            valor.substring(5);
+                }
+                else if (valor.length >= 3) {
+                    valor = valor.substring(0, 3) + " " +
+                            valor.substring(3);
+                }
+
+                input.value = valor;
+
+                if (valor.length === 12) {
+                    input.style.color = "black";
+                } else {
+                    input.style.color = "red";
+                }
+            });
+        }
+
+        configurarTelefono("Telefono1");
+        configurarTelefono("Telefono2");
+    </script>
+
+    <!-- SCRIPT EMPLEO -->
+
+    <script>
+        const puestosPorCategoria = {
+            "Turismo": ["Aparcacoches", "Ayudante de cocina"],
+            "Alimentación": ["Carnicero", "Charcutero"],
+            "Comercial": ["Escapista", "Promotor"],
+            "Educación": ["Profesor", "Monitor"],
+            "Diseño": ["Fotógrafo", "Periodista"],
+            "Electricidad": ["Fibra", "Instalador"]
+        };
+
+        // Función que activa el comportamiento categoría  puesto
+        function activarPickers(fila) {
+            const categoriaSelect = fila.querySelector(".categoria-picker");
+            const puestoSelect = fila.querySelector(".puesto-picker");
+
+            categoriaSelect.addEventListener("change", function () {
+                const categoria = this.value;
+
+                // Resetear opciones
+                puestoSelect.innerHTML = '<option value="">Seleccione un puesto</option>';
+
+                // Cargar puestos
+                if (categoria && puestosPorCategoria[categoria]) {
+                    puestosPorCategoria[categoria].forEach(puesto => {
+                        const option = document.createElement("option");
+                        option.value = puesto;
+                        option.textContent = puesto;
+                        puestoSelect.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        // Activar la fila inicial
+        document.querySelectorAll(".puesto-row").forEach(fila => activarPickers(fila));
+
+        // Botones
+        const contenedor = document.getElementById("contenedor-puestos");
+        const btnAñadir = document.getElementById("btnAñadir");
+        const btnEliminar = document.getElementById("btnEliminar");
+
+        btnAñadir.addEventListener("click", () => {
+            const filas = contenedor.querySelectorAll(".puesto-row").length;
+
+            if (filas >= 6) return; // Máximo 6
+
+            const nuevaFila = contenedor.firstElementChild.cloneNode(true);
+
+            // Resetear selects
+            nuevaFila.querySelector(".categoria-picker").value = "";
+            nuevaFila.querySelector(".puesto-picker").innerHTML =
+                '<option value="">Seleccione un puesto</option>';
+
+            contenedor.appendChild(nuevaFila);
+
+            activarPickers(nuevaFila);
+        });
+
+        btnEliminar.addEventListener("click", () => {
+            const filas = contenedor.querySelectorAll(".puesto-row");
+
+            if (filas.length > 1) {
+                filas[filas.length - 1].remove();
+            }
+        });
+    </script>
+</div>
