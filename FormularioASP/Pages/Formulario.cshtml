@@ -2,7 +2,6 @@
 
 @inject IConfiguration Configuration
 
-
 @model FormularioASP.Pages.FormularioModel
 @{
     ViewData["Title"] = "Formulario de Alta";
@@ -12,15 +11,16 @@
 
     <form method="post" enctype="multipart/form-data">
 
+        <!-- BANNER -->
         <img src="/images/logo.png" style="height:260px;" />
 
-        <br/>
-        <br/>
+        <br /><br />
 
         <!-- DATOS ACCESO -->
         <fieldset class="p-3" style="border: 2px solid #c89de0;">
             <legend class="w-auto" style="font-weight:bold; text-decoration:underline;">DATOS DE ACCESO</legend>
-            <input id="Documento" class="form-control mb-2 obligatorio" placeholder="NIF/NIE/PASAPORTE" />
+
+            <input id="Documento" name="Documento" class="form-control mb-2 obligatorio" placeholder="NIF/NIE/PASAPORTE" />
         </fieldset>
 
         <br />
@@ -30,17 +30,17 @@
             <legend class="w-auto" style="font-weight:bold; text-decoration:underline;">DATOS PERSONALES</legend>
 
             <!-- NOMBRE -->
-            <input id="Apellido1" class="form-control mb-2 obligatorio" placeholder="Nombre" />
-            <input id="Apellido1" class="form-control mb-2 obligatorio" placeholder="Primer Apellido" />
-            <input id="Apellido2" class="form-control mb-2 obligatorio" placeholder="Segundo Apellido" />
+            <input id="Nombre" name="Nombre" class="form-control mb-2 obligatorio" placeholder="Nombre" />
+            <input id="Apellido1" name="Apellido1" class="form-control mb-2 obligatorio" placeholder="Primer Apellido" />
+            <input id="Apellido2" name="Apellido2" class="form-control mb-2 obligatorio" placeholder="Segundo Apellido" />
 
-            <br/>
+            <br />
 
             <!-- FECHA NACIMIENTO -->
             <label class="fw-bold">Fecha de nacimiento:</label>
-            <input asp-for="FechaNacimiento" id="FechaNacimiento" class="form-control mb-2 obligatorio" placeholder="dd/MM/yyyy" />
+            <input asp-for="FechaNacimiento" id="FechaNacimiento" name="FechaNacimiento" class="form-control mb-2 obligatorio" placeholder="dd/MM/yyyy" />
 
-            <br/>
+            <br />
 
             <!-- SEXO -->
             <label class="fw-bold">Sexo:</label>
@@ -49,74 +49,67 @@
                 <label><input type="radio" name="sexo" value="Mujer" /> Mujer</label>
             </div>
 
-            <br/>
+            <br />
 
             <!-- DOMICILIO -->
             <div class="row mb-2">
-
                 <label class="fw-bold">Dirección:</label>
 
                 <div class="col-6">
-                    <input id="Calle" class="form-control obligatorio" placeholder="Calle" />
+                    <input id="Calle" name="Calle" class="form-control obligatorio" placeholder="Calle. Ej: Cristo 6" />
                 </div>
 
                 <div class="col-3">
-                    <input id="Piso" class="form-control obligatorio" placeholder="Piso" />
+                    <input id="Piso" name="Piso" class="form-control obligatorio" placeholder="Piso. Ej: 7" />
                 </div>
 
                 <div class="col-3">
-                    <input id="Puerta" class="form-control obligatorio" placeholder="Puerta" />
+                    <input id="Puerta" name="Puerta" class="form-control obligatorio" placeholder="Puerta. Ej: D" />
                 </div>
             </div>
 
-            <select class="form-select mb-2">
+            <select class="form-select mb-2" name="Poblacion">
                 <option>TORREJÓN DE ARDOZ</option>
-                <option>ALCALÁ DE HENARES</option>
-                <option>COSLADA</option>
             </select>
 
-            <br/>
+            <br />
 
             <!-- TELÉFONO PRINCIPAL -->
             <label class="fw-bold">Teléfono principal:</label>
-
             <div class="mb-2">
-                <input id="Telefono1" class="form-control obligatorio" placeholder="XXX XX XX XX" />
+                <input id="Telefono1" name="Telefono1" class="form-control obligatorio" placeholder="XXX XX XX XX" />
             </div>
 
             <!-- TELÉFONO SECUNDARIO -->
             <label class="fw-bold">Teléfono secundario:</label>
-
             <div class="mb-2">
-                <input id="Telefono2" class="form-control" placeholder="XXX XX XX XX" />
+                <input id="Telefono2" name="Telefono2" class="form-control" placeholder="XXX XX XX XX" />
             </div>
 
-            <br/>
+            <br />
 
             <!-- CORREO -->
             <label class="fw-bold">Correo:</label>
-            <input class="form-control mb-2" placeholder="Email" />
+            <input id="Email" name="Email" class="form-control mb-2" placeholder="Email" />
 
-            <br/>
+            <br />
 
             <!-- NACIONALIDAD -->
             <label class="fw-bold">Nacionalidad:</label>
-            <select class="form-select mb-2">
-                <option>Afganistán</option>
-                <option>España</option>
-                <option>Marruecos</option>
-                <option>Colombia</option>
-                <option>Argentina</option>
-                <option>Venezuela</option>
+            <select class="form-select mb-2" name="Nacionalidad">
+                @foreach (var nac in Model.Nacionalidades)
+                {
+                    <option value="@nac.nClave">@nac.sDescripcion</option>
+                }
             </select>
 
-            <br/>
+            <br />
 
             <!-- FECHA DEMANDA -->
             <label class="fw-bold">Fecha de demandante de empleo:</label>
-            <input asp-for="FechaDemanda" id="FechaDemanda" class="form-control mb-2 obligatorio" placeholder="dd/MM/yyyy" />
+            <input asp-for="FechaDemanda" id="FechaDemanda" name="FechaDemanda" class="form-control mb-2 obligatorio" placeholder="dd/MM/yyyy" />
 
-            <br/>
+            <br />
 
             <!-- DESEMPLEADO -->
             <label class="fw-bold">¿Estás desempleado?</label>
@@ -125,7 +118,7 @@
                 <label><input type="radio" name="desempleo" value="No" /> No</label>
             </div>
 
-            <br/>
+            <br />
 
             <!-- MEJORA -->
             <label class="fw-bold">¿Estás en mejora de empleo?</label>
@@ -144,9 +137,9 @@
             <p class="text-muted">Solo marcar si la discapacidad es igual o mayor del 33%</p>
 
             <div class="row">
-                <div class="col-4"><input type="checkbox" /> Física</div>
-                <div class="col-4"><input type="checkbox" /> Psíquica</div>
-                <div class="col-4"><input type="checkbox" /> Sensorial</div>
+                <div class="col-4"><input type="checkbox" name="DFisica" value="1" /> Física</div>
+                <div class="col-4"><input type="checkbox" name="DPsiquica" value="1" /> Psíquica</div>
+                <div class="col-4"><input type="checkbox" name="DSensorial" value="1" /> Sensorial</div>
             </div>
         </fieldset>
 
@@ -157,26 +150,55 @@
             <legend class="w-auto" style="font-weight:bold; text-decoration:underline;">TIPOS DE CARNETS</legend>
 
             <div class="row row-cols-3">
-                <div class="col"><input type="checkbox" /> A</div>
-                <div class="col"><input type="checkbox" /> A1</div>
-                <div class="col"><input type="checkbox" /> ADR</div>
-                <div class="col"><input type="checkbox" /> Autorización BTP</div>
-                <div class="col"><input type="checkbox" /> B</div>
-                <div class="col"><input type="checkbox" /> B+E</div>
-                <div class="col"><input type="checkbox" /> C</div>
-                <div class="col"><input type="checkbox" /> C+E</div>
-                <div class="col"><input type="checkbox" /> C1</div>
-                <div class="col"><input type="checkbox" /> C1+E</div>
-                <div class="col"><input type="checkbox" /> CAP</div>
-                <div class="col"><input type="checkbox" /> Carretillero</div>
-                <div class="col"><input type="checkbox" /> D</div>
-                <div class="col"><input type="checkbox" /> D1+E</div>
-                <div class="col"><input type="checkbox" /> Internacional</div>
-                <div class="col"><input type="checkbox" /> Tarjeta tacógrafo</div>
+
+                <div class="col"><input type="checkbox" name="permisos" value="2" /> A</div>
+                <div class="col"><input type="checkbox" name="permisos" value="1" /> A1</div>
+                <div class="col"><input type="checkbox" name="permisos" value="14" /> ADR</div>
+                <div class="col"><input type="checkbox" name="permisos" value="12" /> Autorización BTP</div>
+                <div class="col"><input type="checkbox" name="permisos" value="3" /> B</div>
+                <div class="col"><input type="checkbox" name="permisos" value="4" /> B+E</div>
+                <div class="col"><input type="checkbox" name="permisos" value="7" /> C</div>
+                <div class="col"><input type="checkbox" name="permisos" value="8" /> C+E</div>
+                <div class="col"><input type="checkbox" name="permisos" value="5" /> C1</div>
+                <div class="col"><input type="checkbox" name="permisos" value="6" /> C1+E</div>
+                <div class="col"><input type="checkbox" name="permisos" value="15" /> CAP</div>
+                <div class="col"><input type="checkbox" name="permisos" value="17" /> Carretillero</div>
+                <div class="col"><input type="checkbox" name="permisos" value="11" /> D</div>
+                <div class="col"><input type="checkbox" name="permisos" value="10" /> D1+E</div>
+                <div class="col"><input type="checkbox" name="permisos" value="16" /> Internacional</div>
+                <div class="col"><input type="checkbox" name="permisos" value="13" /> Tarjeta tacógrafo</div>
+
             </div>
         </fieldset>
 
+
         <br />
+
+        <!-- ESTILOS DE LOS SELECT (PUESTOS Y CATEGORÍAS) -->
+        <style>
+                    /* Tamaño más pequeño del texto */
+                    .puesto-row select {
+                        font-size: 16px;
+                        padding: 4px 6px;
+                        height: 30px;
+                        width: 100%;
+                        max-width: 100%;
+                        box-sizing: border-box;
+                        /* Para que funcione el "..." */
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                    }
+
+                        /* Opcional: también reducir el texto de las opciones */
+                        .puesto-row select option {
+                            font-size: 16px;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+        </style>
+
 
         <!-- PUESTOS SOLICITADOS -->
         <fieldset class="p-3" style="border: 2px solid #c89de0;">
@@ -196,23 +218,22 @@
 
                 <div class="row mb-3 puesto-row">
                     <div class="col-6">
-                        <select class="form-select categoria-picker">
+                        <select class="categoria-picker" name="Categoria[]">
                             <option value="">Seleccione una categoría</option>
-                            <option value="Turismo">Turismo</option>
-                            <option value="Alimentación">Alimentación</option>
-                            <option value="Comercial">Comercial</option>
-                            <option value="Educación">Educación</option>
-                            <option value="Diseño">Diseño</option>
-                            <option value="Electricidad">Electricidad</option>
+                            @foreach (var cat in Model.Categorias)
+                            {
+                                <option value="@cat.ID">@cat.Nombre</option>
+                            }
                         </select>
                     </div>
 
                     <div class="col-6">
-                        <select class="form-select puesto-picker">
+                        <select class="puesto-picker" name="Profesion[]">
                             <option value="">Seleccione un puesto</option>
                         </select>
                     </div>
                 </div>
+
             </div>
 
             <div class="mt-3">
@@ -227,6 +248,7 @@
                 </button>
             </div>
         </fieldset>
+
 
         <br />
 
@@ -244,13 +266,13 @@
 
         <!-- POLITICA -->
         <div id="PoliticaContainer" class="d-flex gap-2 mb-3">
-            <input type="checkbox" asp-for="PoliticaAceptada" id="PoliticaAceptada" />
+            <input type="checkbox" asp-for="PoliticaAceptada" id="PoliticaAceptada" name="PoliticaAceptada" />
 
             <label>
                 He leído la
                 <a href="#" class="text-decoration-underline"
-                   onclick="mostrarHola(); return false;"
-                   style="color:#c89de0;">
+                       onclick="mostrarHola(); return false;"
+                       style="color:#c89de0;">
                     política de privacidad
                 </a>
             </label>
@@ -269,7 +291,7 @@
             Debes verificar que no eres un robot.
         </p>
 
-        <br/>
+        <br />
 
         <!-- BOTONES FINALES-->
         <div class="d-flex gap-3 justify-content-center">
@@ -283,7 +305,7 @@
 
     </form>
 
-    <!-- MENSAJE POLITICA -->
+    <!-- MODAL POLÍTICA -->
     <div class="modal fade" id="holaModal" tabindex="-1" aria-labelledby="holaLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -293,20 +315,55 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
-                <div class="modal-body">
-                    Quién es el responsable del tratamiento: Ayuntamiento de Torrejón de Ardoz - Plaza Mayor, 1 - 28850 Torrejón de Ardoz. Tfno: 91 678 95 00. Puede contactar con la Delegada de Protección de Datos en dpd@ayto-torrejon.es.<br /><br />
+                <div class="modal-body" style="line-height: 1.6; font-size: 15px;">
 
-                    Con qué finalidad: Llevar a cabo la gestión de búsqueda de empleo y favorecer el contacto entre empresas y demandantes de empleo.<br /><br />
+                    <h5 class="fw-bold mb-3" style="text-decoration: underline;">
+                        Información de protección de datos de carácter personal
+                    </h5>
 
-                    Por qué puede hacerlo: Porque al entregar la ficha de inscripción solicitando el alta en la Bolsa de Empleo nos da su consentimiento para ello.<br /><br />
+                    <p>
+                        <strong>Quién es el responsable del tratamiento:</strong><br>
+                        Ayuntamiento de Torrejón de Ardoz – Plaza Mayor, 1 – 28850 Torrejón de Ardoz.<br>
+                        Teléfono: 91 678 95 00.<br>
+                        Puede contactar con la Delegada de Protección de Datos en
+                        <a href="mailto:dpd@ayto-torrejon.es">dpd@ayto-torrejon.es</a>.
+                    </p>
 
-                    Quién más accede a tus datos: Empresas que se pongan en contacto con la Oficina Municipal de Empleo para posibles incorporaciones en las mismas, siempre y cuando su perfil se ajuste al que la empresa esté solicitando.<br /><br />
+                    <p>
+                        <strong>Con qué finalidad:</strong><br>
+                        Llevar a cabo la gestión de búsqueda de empleo y favorecer el contacto entre empresas
+                        y demandantes de empleo.
+                    </p>
 
-                    Qué derechos tienes y dónde ejercitarlos: Acceso, rectificación, supresión, oposición, limitación del tratamiento y revocación del consentimiento presentando un escrito acompañado de una copia de su documento de identidad 
-                    dirigido a la Concejalía de Administración ante la oficina de Registro presencial o virtual o a través de la Sede Electrónica del Ayuntamiento. Presentación de una reclamación ante la Agencia Española de Protección de Datos (AEPD).<br /><br />
+                    <p>
+                        <strong>Por qué puede hacerlo:</strong><br>
+                        Porque al entregar la ficha de inscripción solicitando el alta en la Bolsa de Empleo
+                        nos da su consentimiento para ello.
+                    </p>
 
-                    Más información: En la página web del Ayuntamiento www.ayto-torrejon.es.<br /><br />
+                    <p>
+                        <strong>Quién más accede a tus datos:</strong><br>
+                        Empresas que se pongan en contacto con la Oficina Municipal de Empleo para posibles
+                        incorporaciones, siempre y cuando su perfil se ajuste al que la empresa esté solicitando.
+                    </p>
+
+                    <p>
+                        <strong>Qué derechos tienes y dónde ejercitarlos:</strong><br>
+                        Acceso, rectificación, supresión, oposición, limitación del tratamiento y revocación
+                        del consentimiento, presentando un escrito acompañado de una copia de su documento de
+                        identidad dirigido a la Concejalía de Administración ante la oficina de Registro
+                        presencial o virtual, o a través de la Sede Electrónica del Ayuntamiento.<br>
+                        También puede presentar una reclamación ante la Agencia Española de Protección de Datos (AEPD).
+                    </p>
+
+                    <p>
+                        <strong>Más información:</strong><br>
+                        En la página web del Ayuntamiento:
+                        <a href="https://www.ayto-torrejon.es" target="_blank">www.ayto-torrejon.es</a>.
+                    </p>
+
                 </div>
+
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -315,281 +372,411 @@
         </div>
     </div>
 
-    <!-- SCRIPT DAR DE ALTA -->
+    <!-- SCRIPTS -->
     <script>
-        document.getElementById("btnEnviar").addEventListener("click", function (e) {
+            //SCRIPT VALIDACION
+            document.getElementById("btnEnviar").addEventListener("click", function (e) {
+                let campos = document.querySelectorAll(".obligatorio");
+                let hayErrores = false;
 
-            let campos = document.querySelectorAll(".obligatorio");
-            let hayErrores = false;
+                campos.forEach(campo => {
+                    campo.classList.remove("campo-error");
 
-            campos.forEach(campo => {
+                    if (campo.querySelectorAll("input[type=radio]").length > 0) {
+                        const radios = campo.querySelectorAll("input[type=radio]");
+                        const algunoMarcado = [...radios].some(r => r.checked);
 
-                campo.classList.remove("campo-error");
+                        if (!algunoMarcado) {
+                            campo.classList.add("campo-error");
+                            hayErrores = true;
+                        }
+                        return;
+                    }
 
-                // Caso especial: grupos de radio
-                if (campo.querySelectorAll("input[type=radio]").length > 0) {
-                    const radios = campo.querySelectorAll("input[type=radio]");
-                    const algunoMarcado = [...radios].some(r => r.checked);
-
-                    if (!algunoMarcado) {
+                    if (!campo.value || campo.value.trim() === "") {
                         campo.classList.add("campo-error");
                         hayErrores = true;
                     }
+                });
 
-                    return;
+                const captchaResponse = document.querySelector('textarea[name="g-recaptcha-response"]')?.value;
+                const captchaContainer = document.getElementById("CaptchaContainer");
+                const captchaError = document.getElementById("CaptchaError");
+
+                if (!captchaResponse || captchaResponse.trim() === "") {
+                    captchaContainer.classList.add("campo-error");
+                    captchaError.style.display = "block";
+                    hayErrores = true;
+                } else {
+                    captchaContainer.classList.remove("campo-error");
+                    captchaError.style.display = "none";
                 }
 
-                // Inputs normales
-                if (!campo.value || campo.value.trim() === "") {
-                    campo.classList.add("campo-error");
+                const politica = document.getElementById("PoliticaAceptada");
+                const politicaContainer = document.getElementById("PoliticaContainer");
+                const politicaError = document.getElementById("PoliticaError");
+
+                if (!politica.checked) {
+                    politicaContainer.classList.add("campo-error");
+                    politicaError.style.display = "block";
                     hayErrores = true;
+                } else {
+                    politicaContainer.classList.remove("campo-error");
+                    politicaError.style.display = "none";
+                }
+
+                if (hayErrores) {
+                    e.preventDefault();
+                    alert("Faltan campos obligatorios por rellenar.");
                 }
             });
+    </script>
 
-
-        // Validación del reCAPTCHA
-        const captchaResponse = document.querySelector('textarea[name="g-recaptcha-response"]')?.value;
-        const captchaContainer = document.getElementById("CaptchaContainer");
-        const captchaError = document.getElementById("CaptchaError");
-
-        if (!captchaResponse || captchaResponse.trim() === "") {
-            captchaContainer.classList.add("campo-error");
-            captchaError.style.display = "block";
-            hayErrores = true;
-        } else {
-            captchaContainer.classList.remove("campo-error");
-            captchaError.style.display = "none";
-        }
-
-        
-        // Validación de la polItica de privacidad
-        const politica = document.getElementById("PoliticaAceptada");
-        const politicaContainer = document.getElementById("PoliticaContainer");
-        const politicaError = document.getElementById("PoliticaError");
-
-        if (!politica.checked) {
-            politicaContainer.classList.add("campo-error");
-            politicaError.style.display = "block";
-            hayErrores = true;
-        } else {
-            politicaContainer.classList.remove("campo-error");
-            politicaError.style.display = "none";
-        }
-
-            if (hayErrores) {
-                e.preventDefault();
-                alert("Faltan campos obligatorios por rellenar.");
+    <script>
+            function mostrarHola() {
+                var modal = new bootstrap.Modal(document.getElementById('holaModal'));
+                modal.show();
             }
-        });
     </script>
 
-    <!-- SCRIPT PARA ABRIR EL MODAL -->
+   <!-- SCRIPT DNI -->
     <script>
-        function mostrarHola() {
-            var modal = new bootstrap.Modal(document.getElementById('holaModal'));
-            modal.show();
-        }
+            function validarDNI(dni) {
+                const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+
+                // Formato: 8 números + 1 letra
+                const regex = /^[0-9]{8}[A-Za-z]$/;
+                if (!regex.test(dni)) return false;
+
+                const numero = parseInt(dni.substring(0, 8), 10);
+                const letra = dni.charAt(8).toUpperCase();
+                const letraCorrecta = letras[numero % 23];
+
+                return letra === letraCorrecta;
+            }
+
+            // Como solo hay un formulario, seleccionamos el primero
+            document.querySelector("form").addEventListener("submit", function (e) {
+                const dni = document.getElementById("Documento").value.trim().toUpperCase();
+
+                if (!validarDNI(dni)) {
+                    e.preventDefault();
+                    alert("El DNI introducido no es válido. Revisa el número y la letra.");
+                }
+            });
     </script>
 
-    <!-- SCRIPT FECHAS -->
+
+
+
     <script>
+        // SCRIPT FECHAS
         function configurarFecha(idCampo, validarEdad) {
-            const input = document.getElementById(idCampo);
+        const input = document.getElementById(idCampo);
 
-            input.addEventListener("input", function () {
+        input.addEventListener("input", function () {
+        const oldValue = input.getAttribute("data-old") || "";
+        const newValue = input.value;
 
-                const oldValue = input.getAttribute("data-old") || "";
-                const newValue = input.value;
+        const borrando = newValue.length < oldValue.length;
 
-                const borrando = newValue.length < oldValue.length;
+        input.setAttribute("data-old", newValue);
 
-                input.setAttribute("data-old", newValue);
+        if (borrando) {
+        input.style.color = "red";
+        return;
+        }
 
-                if (borrando) {
-                    input.style.color = "red";
-                    return;
-                }
+        let valor = newValue.replace(/\D/g, "");
 
-                let valor = newValue.replace(/\D/g, "");
+        if (valor.length > 8)
+        valor = valor.substring(0, 8);
 
-                if (valor.length > 8)
-                    valor = valor.substring(0, 8);
+        if (valor.length >= 4) {
+        valor = valor.substring(0, 2) + "/" +
+        valor.substring(2, 4) + "/" +
+        valor.substring(4);
+        }
+        else if (valor.length >= 2) {
+        valor = valor.substring(0, 2) + "/" +
+        valor.substring(2);
+        }
 
-                if (valor.length >= 4) {
-                    valor = valor.substring(0, 2) + "/" +
-                            valor.substring(2, 4) + "/" +
-                            valor.substring(4);
-                }
-                else if (valor.length >= 2) {
-                    valor = valor.substring(0, 2) + "/" +
-                            valor.substring(2);
-                }
+        input.value = valor;
 
-                input.value = valor;
+        if (valor.length === 10) {
+        if (validarFecha(valor, validarEdad)) {
+        input.style.color = "black";
+        } else {
+        input.style.color = "red";
+        }
+        } else {
+        input.style.color = "red";
+        }
+        });
+        }
 
-                if (valor.length === 10) {
-                    if (validarFecha(valor, validarEdad)) {
+        function validarFecha(texto, validarEdad) {
+        const partes = texto.split("/");
+        if (partes.length !== 3) return false;
+
+        const dia = parseInt(partes[0]);
+        const mes = parseInt(partes[1]);
+        const año = parseInt(partes[2]);
+
+        const fecha = new Date(año, mes - 1, dia);
+
+        if (fecha.getFullYear() !== año ||
+        fecha.getMonth() !== mes - 1 ||
+        fecha.getDate() !== dia) {
+        return false;
+        }
+
+        if (!validarEdad) return true;
+
+        const hoy = new Date();
+        let edad = hoy.getFullYear() - año;
+
+                        const cumpleEsteAño = new Date(hoy.getFullYear(), mes - 1, dia);
+                if (hoy < cumpleEsteAño) edad--;
+
+                return edad >= 16 && edad <= 80;
+            }
+
+            configurarFecha("FechaNacimiento", true);
+            configurarFecha("FechaDemanda", false);
+    </script>
+
+    <!-- SCRIPT TELEFONOS -->
+    <script>
+            function configurarTelefono(idCampo) {
+                const input = document.getElementById(idCampo);
+
+                input.addEventListener("input", function () {
+
+                    const oldValue = input.getAttribute("data-old") || "";
+                    const newValue = input.value;
+
+                    const borrando = newValue.length < oldValue.length;
+                    input.setAttribute("data-old", newValue);
+
+                    if (borrando) {
+                        input.style.color = "red";
+                        return;
+                    }
+
+                    let valor = newValue.replace(/\D/g, "");
+
+                    if (valor.length > 9)
+                        valor = valor.substring(0, 9);
+
+                    if (valor.length >= 7) {
+                        valor = valor.substring(0, 3) + " " +
+                                valor.substring(3, 5) + " " +
+                                valor.substring(5, 7) + " " +
+                                valor.substring(7);
+                    }
+                    else if (valor.length >= 5) {
+                        valor = valor.substring(0, 3) + " " +
+                                valor.substring(3, 5) + " " +
+                                valor.substring(5);
+                    }
+                    else if (valor.length >= 3) {
+                        valor = valor.substring(0, 3) + " " +
+                                valor.substring(3);
+                    }
+
+                    input.value = valor;
+
+                    if (valor.length === 12) {
                         input.style.color = "black";
                     } else {
                         input.style.color = "red";
                     }
-                } else {
-                    input.style.color = "red";
-                }
-            });
-        }
-
-        function validarFecha(texto, validarEdad) {
-            const partes = texto.split("/");
-            if (partes.length !== 3) return false;
-
-            const dia = parseInt(partes[0]);
-            const mes = parseInt(partes[1]);
-            const año = parseInt(partes[2]);
-
-            const fecha = new Date(año, mes - 1, dia);
-
-            if (fecha.getFullYear() !== año ||
-                fecha.getMonth() !== mes - 1 ||
-                fecha.getDate() !== dia) {
-                return false;
+                });
             }
 
-            if (!validarEdad) return true;
-
-            const hoy = new Date();
-            let edad = hoy.getFullYear() - año;
-
-            const cumpleEsteAño = new Date(hoy.getFullYear(), mes - 1, dia);
-            if (hoy < cumpleEsteAño) edad--;
-
-            return edad >= 16 && edad <= 80;
-        }
-
-        configurarFecha("FechaNacimiento", true);
-        configurarFecha("FechaDemanda", false);
+            configurarTelefono("Telefono1");
+            configurarTelefono("Telefono2");
     </script>
 
-    <!-- SCRIPT DE TELEFONOS -->
+    <!-- PUESTOS -->
 
     <script>
-        function configurarTelefono(idCampo) {
-            const input = document.getElementById(idCampo);
+            function mostrarAlertaDuplicado() {
+                const alerta = document.createElement("div");
+                alerta.innerHTML = `
+                    <div style="
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: white;
+                        padding: 25px;
+                        border-radius: 10px;
+                        box-shadow: 0 0 15px rgba(0,0,0,0.3);
+                        z-index: 9999;
+                        width: 90%;
+                        max-width: 400px;
+                        text-align: center;
+                        font-family: Arial;
+                    ">
+                        <h5 style="color:#c89de0; font-weight:bold;">Profesión duplicada</h5>
+                        <p>No se puede elegir la misma profesión dos veces.</p>
+                        <button id="cerrarAlerta" style="
+                            background:#c89de0;
+                            color:white;
+                            border:none;
+                            padding:8px 15px;
+                            border-radius:5px;
+                            margin-top:10px;
+                        ">Aceptar</button>
+                    </div>
+                `;
+                document.body.appendChild(alerta);
 
-            input.addEventListener("input", function () {
-
-                const oldValue = input.getAttribute("data-old") || "";
-                const newValue = input.value;
-
-                const borrando = newValue.length < oldValue.length;
-                input.setAttribute("data-old", newValue);
-
-                if (borrando) {
-                    input.style.color = "red";
-                    return;
-                }
-
-                let valor = newValue.replace(/\D/g, "");
-
-                if (valor.length > 9)
-                    valor = valor.substring(0, 9);
-
-                if (valor.length >= 7) {
-                    valor = valor.substring(0, 3) + " " +
-                            valor.substring(3, 5) + " " +
-                            valor.substring(5, 7) + " " +
-                            valor.substring(7);
-                }
-                else if (valor.length >= 5) {
-                    valor = valor.substring(0, 3) + " " +
-                            valor.substring(3, 5) + " " +
-                            valor.substring(5);
-                }
-                else if (valor.length >= 3) {
-                    valor = valor.substring(0, 3) + " " +
-                            valor.substring(3);
-                }
-
-                input.value = valor;
-
-                if (valor.length === 12) {
-                    input.style.color = "black";
-                } else {
-                    input.style.color = "red";
-                }
-            });
-        }
-
-        configurarTelefono("Telefono1");
-        configurarTelefono("Telefono2");
-    </script>
-
-    <!-- SCRIPT EMPLEO -->
-
-    <script>
-        const puestosPorCategoria = {
-            "Turismo": ["Aparcacoches", "Ayudante de cocina"],
-            "Alimentación": ["Carnicero", "Charcutero"],
-            "Comercial": ["Escapista", "Promotor"],
-            "Educación": ["Profesor", "Monitor"],
-            "Diseño": ["Fotógrafo", "Periodista"],
-            "Electricidad": ["Fibra", "Instalador"]
-        };
-
-        // Función que activa el comportamiento categoría  puesto
-        function activarPickers(fila) {
-            const categoriaSelect = fila.querySelector(".categoria-picker");
-            const puestoSelect = fila.querySelector(".puesto-picker");
-
-            categoriaSelect.addEventListener("change", function () {
-                const categoria = this.value;
-
-                // Resetear opciones
-                puestoSelect.innerHTML = '<option value="">Seleccione un puesto</option>';
-
-                // Cargar puestos
-                if (categoria && puestosPorCategoria[categoria]) {
-                    puestosPorCategoria[categoria].forEach(puesto => {
-                        const option = document.createElement("option");
-                        option.value = puesto;
-                        option.textContent = puesto;
-                        puestoSelect.appendChild(option);
-                    });
-                }
-            });
-        }
-
-        // Activar la fila inicial
-        document.querySelectorAll(".puesto-row").forEach(fila => activarPickers(fila));
-
-        // Botones
-        const contenedor = document.getElementById("contenedor-puestos");
-        const btnAñadir = document.getElementById("btnAñadir");
-        const btnEliminar = document.getElementById("btnEliminar");
-
-        btnAñadir.addEventListener("click", () => {
-            const filas = contenedor.querySelectorAll(".puesto-row").length;
-
-            if (filas >= 6) return; // Máximo 6
-
-            const nuevaFila = contenedor.firstElementChild.cloneNode(true);
-
-            // Resetear selects
-            nuevaFila.querySelector(".categoria-picker").value = "";
-            nuevaFila.querySelector(".puesto-picker").innerHTML =
-                '<option value="">Seleccione un puesto</option>';
-
-            contenedor.appendChild(nuevaFila);
-
-            activarPickers(nuevaFila);
-        });
-
-        btnEliminar.addEventListener("click", () => {
-            const filas = contenedor.querySelectorAll(".puesto-row");
-
-            if (filas.length > 1) {
-                filas[filas.length - 1].remove();
+                document.getElementById("cerrarAlerta").onclick = () => alerta.remove();
             }
-        });
+
+            // ⭐ VALIDACIÓN DE PROFESIONES DUPLICADAS (CORRECTA)
+            function validarProfesionesDuplicadas() {
+                const selects = document.querySelectorAll(".puesto-picker");
+                const valores = new Set();
+                let hayDuplicados = false;
+
+                selects.forEach(sel => {
+                    const val = sel.value;
+
+                    // Ignorar selects vacíos o en la opción por defecto
+                    if (!val || sel.selectedIndex === 0) {
+                        sel.style.border = "";
+                        return;
+                    }
+
+                    if (valores.has(val)) {
+                        sel.style.border = "2px solid red";
+                        hayDuplicados = true;
+                    } else {
+                        sel.style.border = "";
+                        valores.add(val);
+                    }
+                });
+
+                if (hayDuplicados) {
+                    mostrarAlertaDuplicado();
+                    return false;
+                }
+
+                return true;
+            }
+
+            document.addEventListener("change", function (e) {
+                if (e.target.classList.contains("puesto-picker")) {
+                    validarProfesionesDuplicadas();
+                }
+            });
+
+            // ⭐ VALIDACIÓN COMPLETA ANTES DE ENVIAR
+            function validarAntesDeEnviar() {
+                const filas = document.querySelectorAll(".puesto-row");
+                let hayAlMenosUna = false;
+
+                // 1) PROFESIONES DUPLICADAS
+                if (!validarProfesionesDuplicadas()) return false;
+
+                // 2) CATEGORÍA SIN PROFESIÓN / PROFESIÓN SIN CATEGORÍA
+                for (let fila of filas) {
+                    const categoria = fila.querySelector(".categoria-picker").value;
+                    const puesto = fila.querySelector(".puesto-picker").value;
+
+                    if (categoria && !puesto) {
+                        alert("Has seleccionado una categoría sin elegir un puesto.");
+                        return false;
+                    }
+
+                    if (!categoria && puesto) {
+                        alert("Has seleccionado un puesto sin elegir una categoría.");
+                        return false;
+                    }
+
+                    if (categoria && puesto) hayAlMenosUna = true;
+                }
+
+                // 3) AL MENOS UNA FILA COMPLETA
+                if (!hayAlMenosUna) {
+                    alert("Debes seleccionar al menos una categoría y un puesto.");
+                    return false;
+                }
+
+                return true;
+            }
+
+            document.querySelector("form").addEventListener("submit", function (e) {
+                if (!validarAntesDeEnviar()) e.preventDefault();
+            });
+
+            // ⭐ ACTIVAR PICKERS (SIN CAMBIOS)
+            function activarPickers(fila) {
+                const categoriaSelect = fila.querySelector(".categoria-picker");
+                const puestoSelect = fila.querySelector(".puesto-picker");
+
+                categoriaSelect.addEventListener("change", function () {
+                    const idCategoria = this.value;
+
+                    puestoSelect.innerHTML = '<option value="">Cargando...</option>';
+
+                    if (!idCategoria) {
+                        puestoSelect.innerHTML = '<option value="">Seleccione un puesto</option>';
+                        return;
+                    }
+
+                    fetch(`/Formulario?handler=Profesiones&idCategoria=${idCategoria}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            puestoSelect.innerHTML = '<option value="">Seleccione un puesto</option>';
+                            data.forEach(p => {
+                                const option = document.createElement("option");
+                                option.value = p.id;
+                                option.textContent = p.nombre;
+                                puestoSelect.appendChild(option);
+                            });
+                        });
+                });
+            }
+
+            document.querySelectorAll(".puesto-row").forEach(fila => activarPickers(fila));
+
+            const contenedor = document.getElementById("contenedor-puestos");
+            const btnAñadir = document.getElementById("btnAñadir");
+            const btnEliminar = document.getElementById("btnEliminar");
+
+            // ⭐ AÑADIR FILA (FUNCIONAL)
+            btnAñadir.addEventListener("click", () => {
+                const filas = contenedor.querySelectorAll(".puesto-row").length;
+                if (filas >= 6) return;
+
+                const nuevaFila = contenedor.querySelector(".puesto-row").cloneNode(true);
+
+                // Reset visual y real
+                nuevaFila.querySelector(".categoria-picker").value = "";
+                const nuevoPuesto = nuevaFila.querySelector(".puesto-picker");
+                nuevoPuesto.innerHTML = '<option value="">Seleccione un puesto</option>';
+                nuevoPuesto.value = "";
+
+                contenedor.appendChild(nuevaFila);
+                activarPickers(nuevaFila);
+            });
+
+            // ⭐ ELIMINAR FILA
+            btnEliminar.addEventListener("click", () => {
+                const filas = contenedor.querySelectorAll(".puesto-row");
+                if (filas.length > 1) filas[filas.length - 1].remove();
+            });
     </script>
+
+
+
+
+
+
 </div>

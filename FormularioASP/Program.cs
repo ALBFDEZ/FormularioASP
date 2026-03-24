@@ -32,3 +32,6 @@ app.MapGet("/", context =>
 app.MapRazorPages();
 
 app.Run();
+
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+
