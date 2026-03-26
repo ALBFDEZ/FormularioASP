@@ -1,5 +1,15 @@
 ﻿@page
 
+<style>
+    header {
+        display: none !important;
+    }
+
+    footer {
+        display: none !important;
+    }
+</style>
+
 @inject IConfiguration Configuration
 
 @model FormularioASP.Pages.FormularioModel
@@ -7,20 +17,101 @@
     ViewData["Title"] = "Formulario de Alta";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div style="
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        font-weight: bold;">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
 <div class="container mt-4">
 
     <form method="post" enctype="multipart/form-data">
 
-        <!-- BANNER -->
-        <img src="/images/logo.png" style="height:260px;" />
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-        <br /><br />
+        <!-- BANNER -->
+        <style>  
+                    header, footer {
+                        display: none !important;
+                    }
+                    
+                    .banner-registro {
+                        width: 100%;
+                        background-color: #a672c2;
+                        color: white;
+                        padding: 30px 40px;
+                        display: flex;
+                        align-items: center;
+                        gap: 30px;
+                        box-sizing: border-box;
+                    }
+
+                        .banner-registro img {
+                            height: 160px;
+                        }
+
+                    .banner-texto {
+                        flex: 1;
+                    }
+
+                    .banner-titulo {
+                        font-size: 32px;
+                        font-weight: bold;
+                        margin-bottom: 10px;
+                        border-bottom: 4px solid white;
+                        padding-bottom: 5px;
+                        width: fit-content;
+                    }
+
+                    .banner-descripcion {
+                        font-size: 18px;
+                        line-height: 1.4;
+                        margin-top: 10px;
+                    }
+        </style>
+        
+        <div class="banner-registro">
+            <img src="/images/torreShield.png" alt="Logo" />
+
+            <div class="banner-texto">
+                <div class="banner-titulo">REGISTRO DEMANDANTES</div>
+
+                <div class="banner-descripcion">
+                    Para darte de alta en la Bolsa de Empleo OnLine, deberás completar los siguientes datos en su totalidad.<br /><br />
+                    Obligatorio adjuntar Curriculum Vitae que contenga de forma detallada su historial profesional y formativo, y su conocimiento de idiomas.
+                </div>
+            </div>
+        </div>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger" style="margin-bottom:20px;">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <div>@error.ErrorMessage</div>
+                }
+            </div>
+        }
+
+        <br />
+        <br />
 
         <!-- DATOS ACCESO -->
         <fieldset class="p-3" style="border: 2px solid #c89de0;">
             <legend class="w-auto" style="font-weight:bold; text-decoration:underline;">DATOS DE ACCESO</legend>
 
-            <input id="Documento" name="Documento" class="form-control mb-2 obligatorio" placeholder="NIF/NIE/PASAPORTE" />
+            <input asp-for="Documento"
+                   id="Documento"
+                   class="form-control mb-2 obligatorio"
+                   placeholder="NIF/NIE/PASAPORTE" />
         </fieldset>
 
         <br />
@@ -74,13 +165,13 @@
 
             <br />
 
-            <!-- TELÉFONO PRINCIPAL -->
+            <!-- TELEFONO PRINCIPAL -->
             <label class="fw-bold">Teléfono principal:</label>
             <div class="mb-2">
                 <input id="Telefono1" name="Telefono1" class="form-control obligatorio" placeholder="XXX XX XX XX" />
             </div>
 
-            <!-- TELÉFONO SECUNDARIO -->
+            <!-- TELEFONO SECUNDARIO -->
             <label class="fw-bold">Teléfono secundario:</label>
             <div class="mb-2">
                 <input id="Telefono2" name="Telefono2" class="form-control" placeholder="XXX XX XX XX" />
@@ -111,7 +202,7 @@
 
             <br />
 
-            <!-- DESEMPLEADO -->
+            <!-- ESTA DESEMPLEADO -->
             <label class="fw-bold">¿Estás desempleado?</label>
             <div class="d-flex gap-3 mb-2 obligatorio" id="DesempleoGrupo">
                 <label><input type="radio" name="desempleo" value="Sí" /> Sí</label>
@@ -120,7 +211,7 @@
 
             <br />
 
-            <!-- MEJORA -->
+            <!-- MEJORA DE EMPLEO -->
             <label class="fw-bold">¿Estás en mejora de empleo?</label>
             <div class="d-flex gap-3 mb-2 obligatorio" id="MejoraGrupo">
                 <label><input type="radio" name="mejora" value="Sí" /> Sí</label>
@@ -150,7 +241,6 @@
             <legend class="w-auto" style="font-weight:bold; text-decoration:underline;">TIPOS DE CARNETS</legend>
 
             <div class="row row-cols-3">
-
                 <div class="col"><input type="checkbox" name="permisos" value="2" /> A</div>
                 <div class="col"><input type="checkbox" name="permisos" value="1" /> A1</div>
                 <div class="col"><input type="checkbox" name="permisos" value="14" /> ADR</div>
@@ -167,16 +257,13 @@
                 <div class="col"><input type="checkbox" name="permisos" value="10" /> D1+E</div>
                 <div class="col"><input type="checkbox" name="permisos" value="16" /> Internacional</div>
                 <div class="col"><input type="checkbox" name="permisos" value="13" /> Tarjeta tacógrafo</div>
-
             </div>
         </fieldset>
 
-
         <br />
 
-        <!-- ESTILOS DE LOS SELECT (PUESTOS Y CATEGORÍAS) -->
+        <!-- ESTILOS PICKER TRABAJOS -->
         <style>
-                    /* Tamaño más pequeño del texto */
                     .puesto-row select {
                         font-size: 16px;
                         padding: 4px 6px;
@@ -184,13 +271,12 @@
                         width: 100%;
                         max-width: 100%;
                         box-sizing: border-box;
-                        /* Para que funcione el "..." */
+                        
                         overflow: hidden;
                         white-space: nowrap;
                         text-overflow: ellipsis;
                     }
 
-                        /* Opcional: también reducir el texto de las opciones */
                         .puesto-row select option {
                             font-size: 16px;
                             white-space: nowrap;
@@ -199,12 +285,11 @@
                         }
         </style>
 
-
         <!-- PUESTOS SOLICITADOS -->
         <fieldset class="p-3" style="border: 2px solid #c89de0;">
             <legend class="w-auto" style="font-weight:bold; text-decoration:underline;">
                 PUESTOS SOLICITADOS
-                <a href="insertar pagina" target="_blank" class="ms-2" style="color:#c89de0; font-weight:bold;">
+                <a href="https://bolsaempleo.ayto-torrejon.es/" target="_blank" class="ms-2" style="color:#c89de0; font-weight:bold;">
                     (consultar listado)
                 </a>
             </legend>
@@ -233,7 +318,6 @@
                         </select>
                     </div>
                 </div>
-
             </div>
 
             <div class="mt-3">
@@ -248,7 +332,6 @@
                 </button>
             </div>
         </fieldset>
-
 
         <br />
 
@@ -267,7 +350,6 @@
         <!-- POLITICA -->
         <div id="PoliticaContainer" class="d-flex gap-2 mb-3">
             <input type="checkbox" asp-for="PoliticaAceptada" id="PoliticaAceptada" name="PoliticaAceptada" />
-
             <label>
                 He leído la
                 <a href="#" class="text-decoration-underline"
@@ -302,10 +384,9 @@
 
             <button class="btn btn-secondary" asp-page-handler="Cancelar">Cancelar</button>
         </div>
-
     </form>
 
-    <!-- MODAL POLÍTICA -->
+    <!-- MODAL POLITICA EMERGENTE -->
     <div class="modal fade" id="holaModal" tabindex="-1" aria-labelledby="holaLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -433,19 +514,19 @@
     </script>
 
     <script>
+        // SCRIPT MODAL POLITICA
             function mostrarHola() {
                 var modal = new bootstrap.Modal(document.getElementById('holaModal'));
                 modal.show();
             }
     </script>
 
-   <!-- SCRIPT DNI -->
     <script>
+            // VALIDAR DNI
             function validarDNI(dni) {
                 const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
-
-                // Formato: 8 números + 1 letra
                 const regex = /^[0-9]{8}[A-Za-z]$/;
+
                 if (!regex.test(dni)) return false;
 
                 const numero = parseInt(dni.substring(0, 8), 10);
@@ -455,89 +536,102 @@
                 return letra === letraCorrecta;
             }
 
-            // Como solo hay un formulario, seleccionamos el primero
+            //VALIDACION AL ENVIAR FORMULARIO
             document.querySelector("form").addEventListener("submit", function (e) {
-                const dni = document.getElementById("Documento").value.trim().toUpperCase();
+                const doc = document.getElementById("Documento").value.trim().toUpperCase();
 
-                if (!validarDNI(dni)) {
+                const esDNI = validarDNI(doc);
+
+                if (!esDNI) {
                     e.preventDefault();
-                    alert("El DNI introducido no es válido. Revisa el número y la letra.");
+                    alert("El documento introducido no es un DNI válido.");
                 }
             });
     </script>
 
-
-
-
     <script>
-        // SCRIPT FECHAS
-        function configurarFecha(idCampo, validarEdad) {
-        const input = document.getElementById(idCampo);
+            // VALIDAR FECHAS (NACIMIENTO Y DEMANDA)
+            function configurarFecha(idCampo, validarEdad) {
+                const input = document.getElementById(idCampo);
 
-        input.addEventListener("input", function () {
-        const oldValue = input.getAttribute("data-old") || "";
-        const newValue = input.value;
+                input.addEventListener("input", function () {
 
-        const borrando = newValue.length < oldValue.length;
+                    const oldValue = input.getAttribute("data-old") || "";
+                    const newValue = input.value;
 
-        input.setAttribute("data-old", newValue);
+                    const borrando = newValue.length < oldValue.length;
 
-        if (borrando) {
-        input.style.color = "red";
-        return;
-        }
+                    input.setAttribute("data-old", newValue);
 
-        let valor = newValue.replace(/\D/g, "");
+                    if (borrando) {
+                        input.style.color = "red";
+                        return;
+                    }
 
-        if (valor.length > 8)
-        valor = valor.substring(0, 8);
+                    let valor = newValue.replace(/\D/g, "");
 
-        if (valor.length >= 4) {
-        valor = valor.substring(0, 2) + "/" +
-        valor.substring(2, 4) + "/" +
-        valor.substring(4);
-        }
-        else if (valor.length >= 2) {
-        valor = valor.substring(0, 2) + "/" +
-        valor.substring(2);
-        }
+                    if (valor.length > 8)
+                        valor = valor.substring(0, 8);
 
-        input.value = valor;
+                    if (valor.length >= 4) {
+                        valor = valor.substring(0, 2) + "/" +
+                                valor.substring(2, 4) + "/" +
+                                valor.substring(4);
+                    }
+                    else if (valor.length >= 2) {
+                        valor = valor.substring(0, 2) + "/" +
+                                valor.substring(2);
+                    }
 
-        if (valor.length === 10) {
-        if (validarFecha(valor, validarEdad)) {
-        input.style.color = "black";
-        } else {
-        input.style.color = "red";
-        }
-        } else {
-        input.style.color = "red";
-        }
-        });
-        }
+                    input.value = valor;
 
-        function validarFecha(texto, validarEdad) {
-        const partes = texto.split("/");
-        if (partes.length !== 3) return false;
+                    if (valor.length === 10) {
+                        if (validarFecha(valor, validarEdad)) {
+                            input.style.color = "black";
+                        } else {
+                            input.style.color = "red";
+                        }
+                    } else {
+                        input.style.color = "red";
+                    }
+                });
+            }
 
-        const dia = parseInt(partes[0]);
-        const mes = parseInt(partes[1]);
-        const año = parseInt(partes[2]);
+            //cAMBIAR SINTAXIS
+            function validarFecha(texto, validarEdad) {
+                const partes = texto.split("/");
+                if (partes.length !== 3) return false;
 
-        const fecha = new Date(año, mes - 1, dia);
+                const dia = parseInt(partes[0]);
+                const mes = parseInt(partes[1]);
+                const año = parseInt(partes[2]);
 
-        if (fecha.getFullYear() !== año ||
-        fecha.getMonth() !== mes - 1 ||
-        fecha.getDate() !== dia) {
-        return false;
-        }
+                const fecha = new Date(año, mes - 1, dia);
 
-        if (!validarEdad) return true;
+                // Fecha real
+                if (fecha.getFullYear() !== año ||
+                    fecha.getMonth() !== mes - 1 ||
+                    fecha.getDate() !== dia) {
+                    return false;
+                }
 
-        const hoy = new Date();
-        let edad = hoy.getFullYear() - año;
+                //VALIDACION FECHA DEMANDA
+                if (!validarEdad) {
+                    const hoy = new Date();
+                    hoy.setHours(0, 0, 0, 0);
 
-                        const cumpleEsteAño = new Date(hoy.getFullYear(), mes - 1, dia);
+                    const fechaIngresada = new Date(año, mes - 1, dia);
+
+                    if (fechaIngresada > hoy) return false;
+
+                    return true;
+                }
+
+                //VALIDACIONF ECHA NACIMIENTO
+                const hoy = new Date();
+                let edad = hoy.getFullYear() - año;
+
+                const cumpleEsteAño = new Date(hoy.getFullYear(), mes - 1, dia);
                 if (hoy < cumpleEsteAño) edad--;
 
                 return edad >= 16 && edad <= 80;
@@ -545,10 +639,29 @@
 
             configurarFecha("FechaNacimiento", true);
             configurarFecha("FechaDemanda", false);
+
+            //BLOQUEAR SI ALS FECHAS NO CUMPLEN LOS PARAMETROS
+            document.querySelector("form").addEventListener("submit", function (e) {
+
+                const fn = document.getElementById("FechaNacimiento").value.trim();
+                const fd = document.getElementById("FechaDemanda").value.trim();
+
+                if (!validarFecha(fn, true)) {
+                    e.preventDefault();
+                    alert("La fecha de nacimiento no es válida. Debe tener entre 16 y 80 años.");
+                    return;
+                }
+
+                if (!validarFecha(fd, false)) {
+                    e.preventDefault();
+                    alert("La fecha de demanda no puede ser posterior al día de hoy.");
+                    return;
+                }
+            });
     </script>
 
-    <!-- SCRIPT TELEFONOS -->
     <script>
+            //VALIDAR TELEFONOS
             function configurarTelefono(idCampo) {
                 const input = document.getElementById(idCampo);
 
@@ -598,11 +711,28 @@
 
             configurarTelefono("Telefono1");
             configurarTelefono("Telefono2");
+
+            //VALIDACION REAL DEL TELEFONO
+            function telefonoValido(tel) {
+                const regex = /^[0-9]{3} [0-9]{2} [0-9]{2} [0-9]{2}$/;
+                return regex.test(tel.trim());
+            }
+
+            //BLOQUEAR SI EL TELEFONO NO CUMPLE LOS REQUESITOS
+            document.querySelector("form").addEventListener("submit", function (e) {
+
+                const tel = document.getElementById("Telefono1").value;
+
+                if (!telefonoValido(tel)) {
+                    e.preventDefault();
+                    alert("El teléfono introducido no tiene un formato válido.");
+                    return;
+                }
+            });
     </script>
 
-    <!-- PUESTOS -->
-
     <script>
+        //PUESSTOS SOLICITADOS
             function mostrarAlertaDuplicado() {
                 const alerta = document.createElement("div");
                 alerta.innerHTML = `
@@ -638,7 +768,7 @@
                 document.getElementById("cerrarAlerta").onclick = () => alerta.remove();
             }
 
-            // ⭐ VALIDACIÓN DE PROFESIONES DUPLICADAS (CORRECTA)
+            //VALIDACION DE PROFESIONES DUPLICADAS
             function validarProfesionesDuplicadas() {
                 const selects = document.querySelectorAll(".puesto-picker");
                 const valores = new Set();
@@ -647,7 +777,6 @@
                 selects.forEach(sel => {
                     const val = sel.value;
 
-                    // Ignorar selects vacíos o en la opción por defecto
                     if (!val || sel.selectedIndex === 0) {
                         sel.style.border = "";
                         return;
@@ -676,33 +805,43 @@
                 }
             });
 
-            // ⭐ VALIDACIÓN COMPLETA ANTES DE ENVIAR
-            function validarAntesDeEnviar() {
+            //VALIDACIÓN COMPLETA ANTES DE ENVIAR
+                        function validarAntesDeEnviar() {
                 const filas = document.querySelectorAll(".puesto-row");
                 let hayAlMenosUna = false;
 
-                // 1) PROFESIONES DUPLICADAS
+                // Validar duplicados
                 if (!validarProfesionesDuplicadas()) return false;
 
-                // 2) CATEGORÍA SIN PROFESIÓN / PROFESIÓN SIN CATEGORÍA
                 for (let fila of filas) {
-                    const categoria = fila.querySelector(".categoria-picker").value;
-                    const puesto = fila.querySelector(".puesto-picker").value;
+                    const categoria = fila.querySelector(".categoria-picker").value.trim();
+                    const puesto = fila.querySelector(".puesto-picker").value.trim();
 
+                    //Categoría sin puesto
                     if (categoria && !puesto) {
                         alert("Has seleccionado una categoría sin elegir un puesto.");
                         return false;
                     }
 
+                    //Puesto sin categoría
                     if (!categoria && puesto) {
                         alert("Has seleccionado un puesto sin elegir una categoría.");
                         return false;
                     }
 
-                    if (categoria && puesto) hayAlMenosUna = true;
+                    //Fila completamente vacía
+                    if (!categoria && !puesto) {
+                        alert("No puedes dejar filas vacías. Elimina la fila o selecciona categoría y puesto.");
+                        return false;
+                    }
+
+                    //Fila completa y correcta
+                    if (categoria && puesto) {
+                        hayAlMenosUna = true;
+                    }
                 }
 
-                // 3) AL MENOS UNA FILA COMPLETA
+                // Caso 5: No hay ninguna fila completa
                 if (!hayAlMenosUna) {
                     alert("Debes seleccionar al menos una categoría y un puesto.");
                     return false;
@@ -715,13 +854,16 @@
                 if (!validarAntesDeEnviar()) e.preventDefault();
             });
 
-            // ⭐ ACTIVAR PICKERS (SIN CAMBIOS)
-            function activarPickers(fila) {
+
+            //ACTIVAR PICKERS
+                        function activarPickers(fila) {
                 const categoriaSelect = fila.querySelector(".categoria-picker");
                 const puestoSelect = fila.querySelector(".puesto-picker");
 
                 categoriaSelect.addEventListener("change", function () {
                     const idCategoria = this.value;
+
+                    puestoSelect.value = "";
 
                     puestoSelect.innerHTML = '<option value="">Cargando...</option>';
 
@@ -750,14 +892,13 @@
             const btnAñadir = document.getElementById("btnAñadir");
             const btnEliminar = document.getElementById("btnEliminar");
 
-            // ⭐ AÑADIR FILA (FUNCIONAL)
+            //AÑADIR FILA
             btnAñadir.addEventListener("click", () => {
                 const filas = contenedor.querySelectorAll(".puesto-row").length;
                 if (filas >= 6) return;
 
                 const nuevaFila = contenedor.querySelector(".puesto-row").cloneNode(true);
 
-                // Reset visual y real
                 nuevaFila.querySelector(".categoria-picker").value = "";
                 const nuevoPuesto = nuevaFila.querySelector(".puesto-picker");
                 nuevoPuesto.innerHTML = '<option value="">Seleccione un puesto</option>';
@@ -767,16 +908,10 @@
                 activarPickers(nuevaFila);
             });
 
-            // ⭐ ELIMINAR FILA
+            //ELIMINAR FILA
             btnEliminar.addEventListener("click", () => {
                 const filas = contenedor.querySelectorAll(".puesto-row");
                 if (filas.length > 1) filas[filas.length - 1].remove();
             });
     </script>
-
-
-
-
-
-
 </div>

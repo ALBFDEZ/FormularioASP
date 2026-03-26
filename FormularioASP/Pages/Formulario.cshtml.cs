@@ -14,6 +14,9 @@ namespace FormularioASP.Pages
             _config = config;
         }
 
+        [BindProperty]public string Documento { get; set; }
+        [BindProperty]public string Telefono1 { get; set; }
+        [BindProperty] public string Email { get; set; }
         [BindProperty] public string? FechaNacimiento { get; set; }
         [BindProperty] public string? FechaDemanda { get; set; }
         [BindProperty] public IFormFile? ArchivoCV { get; set; }
@@ -60,6 +63,7 @@ namespace FormularioASP.Pages
             return new JsonResult(profesiones);
         }
 
+        //Cargamos las categorias de la BBDD
         private void CargarCategorias()
         {
             Categorias = new();
@@ -82,6 +86,7 @@ namespace FormularioASP.Pages
             }
         }
 
+        //CARGAMOS LAS NACIONALIDADES DE LA BBDD
         private void CargarNacionalidades()
         {
             Nacionalidades = new();
@@ -104,6 +109,98 @@ namespace FormularioASP.Pages
             }
         }
 
+        //VALIDAMOS PARAMETROS DE FECHA NACIMIENTO
+        private bool FechaNacimientoValida(string fecha)
+        {
+            if (string.IsNullOrWhiteSpace(fecha)) return false;
+
+            var partes = fecha.Split('/');
+            if (partes.Length != 3) return false;
+
+            if (!int.TryParse(partes[0], out int dia)) return false;
+            if (!int.TryParse(partes[1], out int mes)) return false;
+            if (!int.TryParse(partes[2], out int año)) return false;
+
+            DateTime fechaNac;
+            if (!DateTime.TryParse($"{año}-{mes}-{dia}", out fechaNac)) return false;
+
+            var hoy = DateTime.Today;
+            int edad = hoy.Year - fechaNac.Year;
+            if (fechaNac > hoy.AddYears(-edad)) edad--;
+
+            return edad >= 16 && edad <= 80;
+        }
+
+        //VALIDAMOS APRAMETROS DE FECHA DEMANDA
+        private bool FechaDemandaValida(string fecha)
+        {
+            if (string.IsNullOrWhiteSpace(fecha)) return false;
+
+            var partes = fecha.Split('/');
+            if (partes.Length != 3) return false;
+
+            if (!int.TryParse(partes[0], out int dia)) return false;
+            if (!int.TryParse(partes[1], out int mes)) return false;
+            if (!int.TryParse(partes[2], out int año)) return false;
+
+            DateTime fechaDem;
+            if (!DateTime.TryParse($"{año}-{mes}-{dia}", out fechaDem)) return false;
+
+            return fechaDem <= DateTime.Today;
+        }
+
+        //VALIDAMOS UNICAMENTE EL DNI
+        private bool DocumentoValido(string doc)
+        {
+            if (string.IsNullOrWhiteSpace(doc))
+                return false;
+
+            doc = doc.Trim().ToUpper();
+
+            // DNI ÚNICAMENTE
+            if (System.Text.RegularExpressions.Regex.IsMatch(doc, @"^[0-9]{8}[A-Z]$"))
+            {
+                string letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+                int numero = int.Parse(doc.Substring(0, 8));
+                char letraCorrecta = letras[numero % 23];
+                return doc[8] == letraCorrecta;
+            }
+
+            return false;
+        }
+        //SI EL DOCUEMTO ESTA REGISTRADO SALTA ERROR
+        private bool ExisteDocumento(string dni)
+        {
+            string connString = _config.GetConnectionString("BolsaEmpleo");
+
+            using SqlConnection conn = new(connString);
+            conn.Open();
+
+            string query = @"
+        SELECT COUNT(*) 
+        FROM AYTO_PERSONA
+        WHERE DOCUMENTO = @dni";
+
+            using SqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@dni", dni);
+
+            int count = (int)cmd.ExecuteScalar();
+            return count > 0;
+        }
+
+
+        private bool TelefonoValido(string tel)
+        {
+            if (string.IsNullOrWhiteSpace(tel))
+                return false;
+
+            return System.Text.RegularExpressions.Regex.IsMatch(
+                tel.Trim(),
+                @"^[0-9]{3} [0-9]{2} [0-9]{2} [0-9]{2}$"
+            );
+        }
+
+
         private async Task<bool> ValidarReCaptcha()
         {
             var secret = _config["GoogleReCaptcha:SecretKey"];
@@ -120,6 +217,7 @@ namespace FormularioASP.Pages
 
         public async Task<IActionResult> OnPostEnviar()
         {
+            //VALIDACION CAPTCHA
             if (!await ValidarReCaptcha())
             {
                 ModelState.AddModelError("", "Debes verificar que no eres un robot.");
@@ -128,6 +226,7 @@ namespace FormularioASP.Pages
                 return Page();
             }
 
+            //VALDIAR POLÍTICA DE PRIVACIDAD
             if (!PoliticaAceptada)
             {
                 ModelState.AddModelError("", "Debes aceptar la política de privacidad.");
@@ -136,22 +235,66 @@ namespace FormularioASP.Pages
                 return Page();
             }
 
+            //TELEFONO 1
+            if (!TelefonoValido(Telefono1))
+            {
+                ModelState.AddModelError("", "El teléfono introducido no tiene un formato válido.");
+                CargarCategorias();
+                CargarNacionalidades();
+                return Page();
+            }
+
+            //FECHA NACIMIENTO
+            if (!FechaNacimientoValida(FechaNacimiento))
+            {
+                ModelState.AddModelError("", "La fecha de nacimiento no es válida. Debe tener entre 16 y 80 años.");
+                CargarCategorias();
+                CargarNacionalidades();
+                return Page();
+            }
+
+            //FECHA DEMANDA
+            if (!FechaDemandaValida(FechaDemanda))
+            {
+                ModelState.AddModelError("", "La fecha de demanda no puede ser posterior al día de hoy.");
+                CargarCategorias();
+                CargarNacionalidades();
+                return Page();
+            }
+
+            //DNI
+            if (!DocumentoValido(Documento))
+            {
+                ModelState.AddModelError("", "El documento introducido no es válido. Debe ser un DNI correcto.");
+                CargarCategorias();
+                CargarNacionalidades();
+                return Page();
+            }
+
+            //SI EL DOCUMENTO INTRODUCIDO, YA SEA DNI O NO, ESTA DUPLICADO
+            if (ExisteDocumento(Documento))
+            {
+                ModelState.AddModelError("", "El documento introducido ya existe y está registrado en la base de datos.");
+                CargarCategorias();
+                CargarNacionalidades();
+                return Page();
+            }
+
+            //CV
             if (ArchivoCV != null)
                 ArchivoNombre = ArchivoCV.FileName;
 
+            //INSERTAR EN LA BBDD
             string connString = _config.GetConnectionString("BolsaEmpleo");
 
             using SqlConnection conn = new(connString);
             conn.Open();
 
-            // ⭐ INICIAMOS TRANSACCIÓN
             using SqlTransaction tran = conn.BeginTransaction();
 
             try
             {
-                // ============================================================
-                // 1) INSERTAR PERSONA  (spAytoInsertarPersona)
-                // ============================================================
+                // PA1 INSERTAR PERSONA -> spAytoInsertarPersona
 
                 SqlCommand cmd = new("spAytoInsertarPersona", conn, tran);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -208,7 +351,7 @@ namespace FormularioASP.Pages
                 cmd.Parameters.AddWithValue("@dpsi", Request.Form["DPsiquica"].ToString() == "1" ? 1 : 0);
                 cmd.Parameters.AddWithValue("@dsen", Request.Form["DSensorial"].ToString() == "1" ? 1 : 0);
 
-                // PERMISOS (cadena vacía, luego se insertan reales)
+                // PERMISOS
                 cmd.Parameters.AddWithValue("@sPermisos", "");
 
                 // CATEGORÍAS Y PROFESIONES
@@ -242,10 +385,8 @@ namespace FormularioASP.Pages
 
                 int personaID = (int)cmd.Parameters["@ReturnValue"].Value;
 
-
-                // ============================================================
-                // 2) INSERTAR DOCUMENTO (spDemandanteDocumento)
-                // ============================================================
+                //================================================
+                //PA 2 INSERTAR DOCUMENTO -> spDemandanteDocumento
 
                 var archivoCV = Request.Form.Files["ArchivoCV"];
 
@@ -264,11 +405,7 @@ namespace FormularioASP.Pages
                     cmdDoc.ExecuteNonQuery();
                 }
 
-
-                // ============================================================
-                // 3) INSERTAR PERMISOS REALES
-                // ============================================================
-
+                //INSERTAR PERMISOS REALES
                 var permisosSeleccionados = Request.Form["permisos"]
                     .Select(int.Parse)
                     .ToList();
@@ -287,18 +424,16 @@ namespace FormularioASP.Pages
                     cmdPerm.ExecuteNonQuery();
                 }
 
-                // ⭐ SI TODO VA BIEN → CONFIRMAMOS
+                //SE CONFIRMA SI TODO HA SALIDO BIEN
                 tran.Commit();
 
-                // ⭐ MENSAJE DE ÉXITO
-                ModelState.AddModelError("", "Formulario enviado correctamente.");
-                CargarCategorias();
-                CargarNacionalidades();
-                return Page();
+                TempData["SuccessMessage"] = "Formulario enviado correctamente.";
+                return RedirectToPage();
+
             }
             catch (Exception ex)
             {
-                // ❌ SI ALGO FALLA → SE DESHACE TODO
+                //SI FALLA SE HACE ROLLBACK PARA QUE NO GUARDE
                 tran.Rollback();
 
                 ModelState.AddModelError("", "Error al guardar los datos.");
